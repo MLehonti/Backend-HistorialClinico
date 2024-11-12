@@ -10,4 +10,5 @@ import java.util.List;
 public interface TriajeRepository extends JpaRepository<Triaje, Long> {
     List<Triaje> findByPacienteId(Long pacienteId);
 
+
 }

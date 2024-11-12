@@ -19,9 +19,16 @@ public class JwtService {
 
     // Método para generar el token
     public String generateToken(Usuario usuario) {
+        // Extraer el primer rol del usuario o establecer un valor por defecto
+        String rol = usuario.getRoles().stream()
+                .findFirst()
+                .map(role -> role.getNombre()) // Suponiendo que `Rol` tiene un campo `nombre`
+                .orElse("ROLE_USER"); // Rol por defecto en caso de que no tenga ningún rol asignado
+
         return Jwts.builder()
                 .setSubject(usuario.getUsername())
                 .claim("usuarioId", usuario.getId()) // Agrega el usuarioId al token
+                .claim("rol", rol) // Agrega el rol al token
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10)) // 10 horas de validez
                 .signWith(SECRET_KEY) // Usando Key en lugar de String
@@ -48,6 +55,11 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
+    // Método para extraer el rol del token
+    public String extractRole(String token) {
+        return extractClaim(token, claims -> claims.get("rol", String.class));
+    }
+
     // Método genérico para extraer cualquier claim del token JWT
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
         final Claims claims = extractAllClaims(token);
@@ -63,11 +75,9 @@ public class JwtService {
                 .getBody();
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    // JwtService.java
+    // Método para extraer el ID de usuario
     public Long extractUserId(String token) {
         Claims claims = extractAllClaims(token);
-        return Long.valueOf(claims.get("usuarioId").toString()); // Asegúrate de que esto coincide con la forma en que generas el token
+        return Long.valueOf(claims.get("usuarioId").toString());
     }
-
 }

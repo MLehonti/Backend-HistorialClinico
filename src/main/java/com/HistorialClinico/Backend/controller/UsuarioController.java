@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.HistorialClinico.Backend.model.Rol;
+
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -109,8 +111,14 @@ public class UsuarioController {
 
         if (usuario.isPresent() && usuarioService.checkPassword(loginRequest.getPassword(), usuario.get().getPassword())) {
             String token = jwtService.generateToken(usuario.get());
+
+            // Obtener el primer rol del usuario (si solo hay un rol por usuario)
+            String rol = usuario.get().getRoles().stream().findFirst().map(Rol::getNombre).orElse("ROLE_USER");
+
             response.put("token", token);
-            response.put("usuarioId", usuario.get().getId()); // Agrega el usuarioId a la respuesta
+            response.put("usuarioId", usuario.get().getId()); // ID del usuario
+            response.put("rol", rol); // Agrega el rol del usuario
+
             return ResponseEntity.ok(response);
         } else {
             response.put("error", "Credenciales incorrectas");
