@@ -3,6 +3,7 @@ package com.HistorialClinico.Backend.controller;
 import com.HistorialClinico.Backend.dto.TriajeDTO;
 import com.HistorialClinico.Backend.dto.TriajeResponseDTO;
 import com.HistorialClinico.Backend.model.Triaje;
+import com.HistorialClinico.Backend.service.BitacoraService;
 import com.HistorialClinico.Backend.service.TriajeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ import java.util.List;
 @RequestMapping("/api/triajes")
 public class TriajeController {
 
+    @Autowired
+    private BitacoraService bitacoraService;
+
     private final TriajeService triajeService;
 
     @Autowired
@@ -26,6 +30,14 @@ public class TriajeController {
     @PostMapping("/crear")
     public ResponseEntity<Triaje> crearTriaje(@Valid @RequestBody TriajeDTO triajeDTO) {
         Triaje nuevoTriaje = triajeService.crearTriaje(triajeDTO);
+
+        // Registrar en la bitácora usando el ID de la enfermera
+        bitacoraService.registrar(
+                "Enfermera con ID " + triajeDTO.getEnfermeraId(), // Usuario que realizó la acción
+                "Creación de Triaje", // Acción
+                "Triaje creado con ID " + nuevoTriaje.getId() + " para el paciente con ID " + triajeDTO.getPacienteId() // Detalles
+        );
+
         return ResponseEntity.ok(nuevoTriaje);
     }
 

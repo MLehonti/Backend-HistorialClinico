@@ -14,6 +14,7 @@ public interface HorarioRepository extends JpaRepository<Horario, Long> {
     // Método personalizado para obtener los horarios de un médico, ya que la especialidad fue eliminada
     @Query("SELECT h FROM Horario h JOIN h.usuarios u WHERE u.id = :medicoId")
     List<Horario> findHorariosByMedicoId(@Param("medicoId") Long medicoId);
+
     List<Horario> findByTurnoId(Long turnoId);
 
 }

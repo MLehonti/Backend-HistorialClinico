@@ -182,9 +182,9 @@ public class UsuarioService {
         return usuarioRepository.findEspecialidadesByUsuarioId(usuarioId);
     }
 
-
-
-
+    public boolean existsByUsername(String username) {
+        return usuarioRepository.existsByUsername(username);
+    }
 
 
 

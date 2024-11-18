@@ -38,4 +38,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
     // Agrega este método
     @Query("SELECT u.especialidades FROM Usuario u WHERE u.id = :usuarioId")
     List<Especialidad> findEspecialidadesByUsuarioId(@Param("usuarioId") Long usuarioId);
+
+    // Método para verificar si un usuario con un nombre específico ya existe
+    boolean existsByUsername(String username);
 }

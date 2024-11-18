@@ -21,6 +21,8 @@ import java.util.stream.Collectors;
 public class UsuarioEspecialidadDiaController {
 
     @Autowired
+    private BitacoraService bitacoraService;
+    @Autowired
     private UsuarioService usuarioService;
 
     @Autowired
@@ -123,6 +125,15 @@ public class UsuarioEspecialidadDiaController {
 
             usuarioEspecialidadDiaService.asignarEspecialidadDia(asignacion);
         }
+
+        // Registro en la bitácora después de la asignación
+        String usuarioLogeado = request.getNombreUsuarioLogeado(); // Asegúrate de tener el nombre del usuario logueado en el request
+        bitacoraService.registrar(
+                usuarioLogeado, // Usuario que realizó la asignación
+                "Asignación de Especialidad y Día", // Acción
+                "Especialidad con ID " + especialidadId + " asignada al usuario con ID " + usuarioId +
+                        " en los días con IDs " + diaIds + " y turno con ID " + turnoId // Detalles
+        );
 
         // Devolver un objeto JSON en lugar de texto plano
         Map<String, String> response = new HashMap<>();

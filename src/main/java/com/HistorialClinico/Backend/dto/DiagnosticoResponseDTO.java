@@ -10,6 +10,7 @@ public class DiagnosticoResponseDTO {
     private String nombreMedico;
     private String nombrePaciente;
     private String especialidad;
+    private String tratamiento;
 
     // Getters y Setters
     public Long getId() {
@@ -58,5 +59,13 @@ public class DiagnosticoResponseDTO {
 
     public void setEspecialidad(String especialidad) {
         this.especialidad = especialidad;
+    }
+
+    public String getTratamiento() {
+        return tratamiento;
+    }
+
+    public void setTratamiento(String tratamiento) {
+        this.tratamiento = tratamiento;
     }
 }

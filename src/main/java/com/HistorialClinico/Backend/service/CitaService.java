@@ -17,23 +17,29 @@ public class CitaService {
     private final EspecialidadRepository especialidadRepository;
     private final TurnoRepository turnoRepository;
     private final DiaRepository diaRepository;
+    private final HorarioRepository horarioRepository;
+
+
 
     @Autowired
     public CitaService(CitaRepository citaRepository,
                        UsuarioRepository usuarioRepository,
                        EspecialidadRepository especialidadRepository,
                        TurnoRepository turnoRepository,
-                       DiaRepository diaRepository) {
+                       DiaRepository diaRepository,
+                       HorarioRepository horarioRepository) {
         this.citaRepository = citaRepository;
         this.usuarioRepository = usuarioRepository;
         this.especialidadRepository = especialidadRepository;
         this.turnoRepository = turnoRepository;
         this.diaRepository = diaRepository;
+        this.horarioRepository =horarioRepository;
     }
 
     public Cita crearCita(CitaDTO citaDTO) {
         Cita cita = new Cita();
 
+        // Configuración de otros atributos de Cita
         Usuario usuario = usuarioRepository.findById(citaDTO.getUsuarioId())
                 .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
         Usuario medico = usuarioRepository.findById(citaDTO.getMedicoId())
@@ -44,17 +50,27 @@ public class CitaService {
                 .orElseThrow(() -> new RuntimeException("Turno no encontrado"));
         Dia dia = diaRepository.findById(citaDTO.getDiaId())
                 .orElseThrow(() -> new RuntimeException("Día no encontrado"));
+        Horario horario = horarioRepository.findById(citaDTO.getHorarioId())
+                .orElseThrow(() -> new RuntimeException("Horario no encontrado"));
 
+        // Asignación de atributos
         cita.setUsuario(usuario);
-        cita.setMedico(medico); // Asignación del médico
+        cita.setMedico(medico);
         cita.setEspecialidad(especialidad);
         cita.setTurno(turno);
         cita.setDia(dia);
-        cita.setHorario(citaDTO.getHorario());
+        cita.setHorario(horario.getTimeSlot().toString()); // Almacena el horario en texto
         cita.setNombreUsuarioLogeado(citaDTO.getNombreUsuarioLogeado());
+        cita.setHorarioSeleccionado(horario); // Asigna el objeto Horario
 
+        // Cambiar disponibilidad del horario a false
+        horario.setDisponibilidad(false);
+        horarioRepository.save(horario); // Guardar el cambio en la base de datos
+
+        // Guardar la cita
         return citaRepository.save(cita);
     }
+
 
 
     public List<CitaResponseDTO> obtenerCitasPorUsuarioId(Long usuarioId) {

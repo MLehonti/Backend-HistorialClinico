@@ -4,6 +4,7 @@ import com.HistorialClinico.Backend.model.Especialidad;
 import com.HistorialClinico.Backend.model.Horario;
 import com.HistorialClinico.Backend.model.LoginRequest;
 import com.HistorialClinico.Backend.model.Usuario;
+import com.HistorialClinico.Backend.service.BitacoraService;
 import com.HistorialClinico.Backend.service.JwtService;
 import com.HistorialClinico.Backend.service.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,12 +29,21 @@ public class UsuarioController {
     private UsuarioService usuarioService;
 
     @Autowired
+    private BitacoraService bitacoraService;
+
+    @Autowired
     private JwtService jwtService;
 
     // Crear un nuevo usuario
     @PostMapping(value = "/registro", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, Object>> registro(@RequestBody Usuario usuario) {
         Usuario nuevoUsuario = usuarioService.saveUsuario(usuario);
+        // Registrar en la bitácora
+        bitacoraService.registrar(
+                "Administrador del sistema", // Usuario que realizó la acción
+                "Registro de Nuevo Usuario", // Acción
+                "Usuario creado con ID " + nuevoUsuario.getId() + " y nombre de usuario " + nuevoUsuario.getUsername() // Detalles
+        );
         Map<String, Object> response = new HashMap<>();
         response.put("usuario", nuevoUsuario);
         return ResponseEntity.ok(response);
@@ -118,6 +128,13 @@ public class UsuarioController {
             response.put("token", token);
             response.put("usuarioId", usuario.get().getId()); // ID del usuario
             response.put("rol", rol); // Agrega el rol del usuario
+
+            //registro de bitacora
+            bitacoraService.registrar(
+                   usuario.get().getUsername(),// usuario
+                    "Inicio de Sesion",//accion
+                    "Inicio de Sesion Exitoso para el usuario de rol "+ rol//detalles
+            );
 
             return ResponseEntity.ok(response);
         } else {

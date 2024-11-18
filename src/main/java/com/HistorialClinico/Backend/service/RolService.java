@@ -27,4 +27,8 @@ public class RolService {
     public List<Rol> findAllRoles() {
         return rolRepository.findAll();
     }
+
+    public boolean existsByNombre(String nombre) {
+        return rolRepository.existsByNombre(nombre);
+    }
 }

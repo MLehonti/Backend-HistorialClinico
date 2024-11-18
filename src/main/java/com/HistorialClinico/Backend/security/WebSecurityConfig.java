@@ -59,6 +59,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/api/triajes/**").permitAll()
                         .requestMatchers("/api/antecedentes/**").permitAll()
                         .requestMatchers("/api/diagnosticos/**").permitAll()
+                        .requestMatchers("/api/bitacora/**").permitAll()
                         .requestMatchers("/api/medicos/**").permitAll()//permitir las rutas de medicos a todos
                         .requestMatchers("/api/usuarios/perfil").authenticated() // Solo usuarios autenticados pueden acceder al perfil
                         .anyRequest().authenticated() // Cualquier otra solicitud requiere autenticación

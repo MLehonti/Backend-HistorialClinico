@@ -3,6 +3,8 @@ package com.HistorialClinico.Backend.model;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "cita")
 public class Cita {
@@ -17,7 +19,7 @@ public class Cita {
     private Usuario usuario;
 
     @ManyToOne
-    @JoinColumn(name = "medico_id", nullable = false) // Nuevo campo para el médico
+    @JoinColumn(name = "medico_id", nullable = false)
     @JsonBackReference("medico-cita")
     private Usuario medico;
 
@@ -37,16 +39,24 @@ public class Cita {
     private Dia dia;
 
     @Column(nullable = false)
-    private String horario;
+    private String horario; // Atributo de tipo String para almacenar el horario en texto
 
     @Column(name = "nombre_usuario_logeado", nullable = false)
     private String nombreUsuarioLogeado;
+
+    @Column(name = "fecha", nullable = false, insertable = false, updatable = false)
+    @Transient
+    private LocalDate fecha; // Campo fecha que toma el valor de la fecha del Horario seleccionado
+
+    @ManyToOne
+    @JoinColumn(name = "horario_id", nullable = false)
+    private Horario horarioSeleccionado; // Renombrado para evitar conflicto con el atributo horario
 
     // Constructor vacío
     public Cita() {}
 
     // Constructor con parámetros
-    public Cita(Usuario usuario, Usuario medico, Especialidad especialidad, Turno turno, Dia dia, String horario, String nombreUsuarioLogeado) {
+    public Cita(Usuario usuario, Usuario medico, Especialidad especialidad, Turno turno, Dia dia, String horario, String nombreUsuarioLogeado, Horario horarioSeleccionado) {
         this.usuario = usuario;
         this.medico = medico;
         this.especialidad = especialidad;
@@ -54,6 +64,8 @@ public class Cita {
         this.dia = dia;
         this.horario = horario;
         this.nombreUsuarioLogeado = nombreUsuarioLogeado;
+        this.horarioSeleccionado = horarioSeleccionado; // Asigna el objeto Horario seleccionado
+        this.fecha = horarioSeleccionado != null ? horarioSeleccionado.getFecha() : null; // Sincroniza la fecha con la de Horario
     }
 
     // Getters y Setters
@@ -119,5 +131,18 @@ public class Cita {
 
     public void setNombreUsuarioLogeado(String nombreUsuarioLogeado) {
         this.nombreUsuarioLogeado = nombreUsuarioLogeado;
+    }
+
+    public LocalDate getFecha() {
+        return horarioSeleccionado != null ? horarioSeleccionado.getFecha() : fecha;
+    }
+
+    public Horario getHorarioSeleccionado() {
+        return horarioSeleccionado;
+    }
+
+    public void setHorarioSeleccionado(Horario horarioSeleccionado) {
+        this.horarioSeleccionado = horarioSeleccionado;
+        this.fecha = horarioSeleccionado != null ? horarioSeleccionado.getFecha() : null; // Sincroniza la fecha con la de Horario
     }
 }

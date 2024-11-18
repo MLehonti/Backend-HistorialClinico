@@ -8,6 +8,8 @@ public class AsignacionRequest {
     private Long especialidadId;
     private Long turnoId;
     private List<Long> diaIds;
+    private String nombreUsuarioLogeado; // Campo para el nombre del usuario logueado
+
 
     // Getters y Setters
     public Long getUsuarioId() {
@@ -40,5 +42,13 @@ public class AsignacionRequest {
 
     public void setDiaIds(List<Long> diaIds) {
         this.diaIds = diaIds;
+    }
+
+    public String getNombreUsuarioLogeado() {
+        return nombreUsuarioLogeado;
+    }
+
+    public void setNombreUsuarioLogeado(String nombreUsuarioLogeado) {
+        this.nombreUsuarioLogeado = nombreUsuarioLogeado;
     }
 }

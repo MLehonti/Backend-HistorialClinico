@@ -46,6 +46,8 @@ public class DiagnosticoService {
         diagnostico.setDescripcion(diagnosticoDTO.getDescripcion());
         diagnostico.setFecha(diagnosticoDTO.getFecha());
         diagnostico.setEspecialidad(especialidad);
+        diagnostico.setTratamiento(diagnosticoDTO.getTratamiento());
+
 
         return diagnosticoRepository.save(diagnostico);
     }
@@ -76,6 +78,7 @@ public class DiagnosticoService {
         dto.setNombreMedico(diagnostico.getMedico().getUsername());
         dto.setNombrePaciente(diagnostico.getPaciente().getUsername());
         dto.setEspecialidad(diagnostico.getEspecialidad().getNombre());
+        dto.setTratamiento(diagnostico.getTratamiento());
         return dto;
     }
 }

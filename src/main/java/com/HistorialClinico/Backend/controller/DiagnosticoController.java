@@ -5,6 +5,7 @@ package com.HistorialClinico.Backend.controller;
 import com.HistorialClinico.Backend.dto.DiagnosticoDTO;
 import com.HistorialClinico.Backend.dto.DiagnosticoResponseDTO;
 import com.HistorialClinico.Backend.model.Diagnostico;
+import com.HistorialClinico.Backend.service.BitacoraService;
 import com.HistorialClinico.Backend.service.DiagnosticoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/diagnosticos")
 public class DiagnosticoController {
+    @Autowired
+    private BitacoraService bitacoraService;
 
     private final DiagnosticoService diagnosticoService;
 
@@ -26,6 +29,12 @@ public class DiagnosticoController {
     @PostMapping("/crear")
     public ResponseEntity<Diagnostico> crearDiagnostico(@RequestBody DiagnosticoDTO diagnosticoDTO) {
         Diagnostico nuevoDiagnostico = diagnosticoService.crearDiagnostico(diagnosticoDTO);
+        // Registrar en la bitácora
+        bitacoraService.registrar(
+                "Médico con ID " + diagnosticoDTO.getMedicoId(), // Usuario que realizó la acción
+                "Creación de Diagnóstico", // Acción
+                "Diagnóstico creado con ID " + nuevoDiagnostico.getId() + " para el paciente con ID " + diagnosticoDTO.getPacienteId() // Detalles
+        );
         return ResponseEntity.ok(nuevoDiagnostico);
     }
 

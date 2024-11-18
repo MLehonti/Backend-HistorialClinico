@@ -31,6 +31,9 @@ public class Diagnostico {
     @JoinColumn(name = "especialidad_id", nullable = false)
     private Especialidad especialidad;
 
+
+    @Column(name = "tratamiento", length = 500) // Nueva columna 'tratamiento'
+    private String tratamiento;
     // Getters y Setters
 
     public Long getId() {
@@ -79,5 +82,13 @@ public class Diagnostico {
 
     public void setEspecialidad(Especialidad especialidad) {
         this.especialidad = especialidad;
+    }
+
+    public String getTratamiento() {
+        return tratamiento;
+    }
+
+    public void setTratamiento(String tratamiento) {
+        this.tratamiento = tratamiento;
     }
 }

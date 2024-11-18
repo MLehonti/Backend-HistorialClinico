@@ -1,6 +1,7 @@
 package com.HistorialClinico.Backend.dto;
 
 import jakarta.validation.constraints.NotNull;
+import java.time.LocalDate;
 
 public class CitaDTO {
 
@@ -8,7 +9,7 @@ public class CitaDTO {
     private Long usuarioId;
 
     @NotNull(message = "El médico ID es obligatorio")
-    private Long medicoId; // Agregar este campo para el ID del médico
+    private Long medicoId; // Campo para el ID del médico
 
     @NotNull(message = "La especialidad ID es obligatoria")
     private Long especialidadId;
@@ -24,6 +25,12 @@ public class CitaDTO {
 
     @NotNull(message = "El nombre del usuario logueado es obligatorio")
     private String nombreUsuarioLogeado;
+
+    @NotNull(message = "La fecha es obligatoria")
+    private LocalDate fecha; // Campo para la fecha
+
+    @NotNull(message = "El horario ID es obligatorio")
+    private Long horarioId; // Nuevo campo para el ID del horario
 
     // Getters y Setters
     public Long getUsuarioId() {
@@ -80,5 +87,21 @@ public class CitaDTO {
 
     public void setNombreUsuarioLogeado(String nombreUsuarioLogeado) {
         this.nombreUsuarioLogeado = nombreUsuarioLogeado;
+    }
+
+    public LocalDate getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDate fecha) {
+        this.fecha = fecha;
+    }
+
+    public Long getHorarioId() {
+        return horarioId;
+    }
+
+    public void setHorarioId(Long horarioId) {
+        this.horarioId = horarioId;
     }
 }

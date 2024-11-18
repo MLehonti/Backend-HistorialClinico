@@ -10,6 +10,7 @@ public class DiagnosticoDTO {
     private String descripcion;
     private LocalDate fecha;
     private Long especialidadId;
+    private String tratamiento;
 
     // Getters y Setters
 
@@ -51,5 +52,13 @@ public class DiagnosticoDTO {
 
     public void setEspecialidadId(Long especialidadId) {
         this.especialidadId = especialidadId;
+    }
+
+    public String getTratamiento() {
+        return tratamiento;
+    }
+
+    public void setTratamiento(String tratamiento) {
+        this.tratamiento = tratamiento;
     }
 }

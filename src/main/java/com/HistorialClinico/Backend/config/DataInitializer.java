@@ -56,20 +56,20 @@
 //    }
 //}
 
-
 package com.HistorialClinico.Backend.config;
 
 import com.HistorialClinico.Backend.model.Especialidad;
-import com.HistorialClinico.Backend.model.Horario;
 import com.HistorialClinico.Backend.model.Rol;
+import com.HistorialClinico.Backend.model.Usuario;
 import com.HistorialClinico.Backend.service.EspecialidadService;
 import com.HistorialClinico.Backend.service.HorarioService;
 import com.HistorialClinico.Backend.service.RolService;
+import com.HistorialClinico.Backend.service.UsuarioService;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.time.LocalTime;
 import java.util.Arrays;
 import java.util.List;
 
@@ -79,11 +79,15 @@ public class DataInitializer {
     private final EspecialidadService especialidadService;
     private final HorarioService horarioService;
     private final RolService rolService;
+    private final UsuarioService usuarioService;
+    private final PasswordEncoder passwordEncoder;
 
-    public DataInitializer(EspecialidadService especialidadService, HorarioService horarioService, RolService rolService) {
+    public DataInitializer(EspecialidadService especialidadService, HorarioService horarioService, RolService rolService, UsuarioService usuarioService, PasswordEncoder passwordEncoder) {
         this.especialidadService = especialidadService;
         this.horarioService = horarioService;
         this.rolService = rolService;
+        this.usuarioService = usuarioService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Bean
@@ -102,15 +106,14 @@ public class DataInitializer {
                 }
             }
 
-
-
             // Crear roles por defecto si no existen
             List<String> rolesPorDefecto = List.of("ROLE_ADMIN", "ROLE_ENFERMERA", "ROLE_MEDICO", "ROLE_USER");
 
             for (String nombre : rolesPorDefecto) {
                 rolService.findByNombre(nombre).orElseGet(() -> rolService.saveRol(new Rol(nombre)));
             }
+
+
         };
     }
 }
-
